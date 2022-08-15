@@ -1,0 +1,277 @@
+/*
+    #2C3333
+    #395B64
+    #A5C9CA
+    #E7F6F2
+
+    https://colorhunt.co/palette/2c3333395b64a5c9cae7f6f2
+*/
+
+*{
+    margin: 0;
+    padding: 0;
+    /*border: 1px solid red;*/
+}
+
+hmtl, body{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    background-color: #E7F6F2;
+    font-family: 'Raleway', sans-serif;
+    color: #2C3333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header{
+    width: 100%;
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    background-color: #2C3333;
+    color: #E7F6F2;
+}
+
+#menu-icon{
+    position: absolute;
+    left: 10px;
+}
+
+#menu-icon ion-icon{
+    font-size: 24px;
+}
+
+#menu-icon:hover{
+    cursor: pointer ;
+}
+
+#modal-menu{
+    position: absolute;
+    height: 100%;
+    width: 200px;
+    background-color: #395B64;
+    display: none;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    z-index: 5;
+}
+
+@keyframes slide-right {
+    from{
+        left: -200px;
+    }
+    to{
+        left: 0px;
+    }
+}
+
+@keyframes slide-left {
+    from{
+        left: 0px;
+    }
+    to{
+        left: -200px;
+    }
+}
+
+#close-modal{
+    z-index: 6;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 28px;
+}
+
+#close-modal:hover{
+    cursor: pointer;
+}
+
+.modal-menu-options{
+    width: 80%;
+    height: 40px;
+    background-color: #E7F6F2;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #2C3333;
+    margin: 5px 0;
+    transition: all 300ms linear;
+    border: 2px solid transparent;
+}
+
+.modal-menu-options:hover{
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #E7F6F2;
+    background-color: #2C3333;
+    color: #E7F6F2;
+}
+
+#loggin-wrapper{
+    position: absolute;
+    right: 10px;
+}
+
+#loggin-wrapper span:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+h1{
+    font-weight: 300;
+    font-size: 28px;
+}
+h2{
+    font-weight: 300;
+    font-size: 24px;
+}
+h3{
+    font-weight: 300;
+    font-size: 20px;
+}
+
+span{
+    font-size: 16px;
+    font-weight: 200;
+}
+
+#keyboard-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.virtual-keyboard-container{
+    width: fit-content;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.virtual-keyboard-row{
+    padding: 5px 5px;
+    margin-bottom: 10px;
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+}
+
+.virtual-keyboard-key{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 5px;
+    padding-left: 5px;
+    background-color: #A5C9CA;
+    margin: 0 5px;
+    border: 2px solid #2C3333;
+    border-radius: 8px;
+}
+
+.toggle-virtual-keyboard{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: #2C3333;
+}
+
+.toggle-virtual-keyboard:hover{
+    cursor: pointer;
+}
+
+.toggle-virtual-keyboard img{
+    width: 25px;
+    z-index: 2;
+}
+
+.toggle-virtual-keyboard ion-icon{
+    font-size: 36px;
+    position: absolute;
+    z-index: 3;
+    opacity: 0.7;
+    display: none;
+}
+
+#main-content{
+    margin-top: 25px;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 20px;
+    word-break: break-all;
+    padding: 0 30px;
+}
+
+@media screen and (max-width: 1200px) {
+    .virtual-keyboard-key{
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    #modal-menu{
+        width: 100%;
+    }
+    @keyframes slide-right {
+        from{
+            left: -100%;
+        }
+        to{
+            left: 0px;
+        }
+    }
+    
+    @keyframes slide-left {
+        from{
+            left: 0px;
+        }
+        to{
+            left: -100%;
+        }
+    }
+}
+@media screen and (max-width: 800px) {
+    .virtual-keyboard-key{
+        display: none;
+    }
+    #modal-menu{
+        width: 100%;
+    }
+    @keyframes slide-right {
+        from{
+            left: -100%;
+        }
+        to{
+            left: 0px;
+        }
+    }
+    
+    @keyframes slide-left {
+        from{
+            left: 0px;
+        }
+        to{
+            left: -100%;
+        }
+    }
+}
