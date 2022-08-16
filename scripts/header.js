@@ -38,10 +38,16 @@ closeModal.setAttribute("id", "close-modal");
 closeModal.addEventListener("click", ()=>{toggleModalMenu()});
 modalMenu.appendChild(closeModal);
 
+const pageTitle = document.title;
+
 const buttons = [
     {
-        text: "Lekcije",
-        action: ()=>console.log("lekcije"),
+        text: "Domov",
+        action: ()=> {window.location = `.${pageTitle !== "DPT" ? "." : ""}/index.html`},
+    },
+    {
+        text: "Vaje",
+        action: ()=> {window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}lessons.html`},
     },
     {
         text: "Prijava",

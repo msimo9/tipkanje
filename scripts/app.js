@@ -1,6 +1,12 @@
 const mainContent = document.getElementById("main-content");
 
-let sampleString = "Lorem ipsum dolor sit amen";
+let exercises = localStorage.getItem('exercises');
+exercises = exercises.split(",");
+let timeAdded = localStorage.getItem("timeAdded");
+console.log("exercises: ", exercises);
+console.log("timeAdded: ", timeAdded);
+
+let sampleString = "Bezgov brizgec brizga bezgovo brozgo";
 let cutSampleString = sampleString;
 cutSampleString = cutSampleString.replaceAll(" ", "␣")
 mainContent.innerText = cutSampleString.toUpperCase();
