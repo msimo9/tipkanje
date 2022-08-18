@@ -2,6 +2,11 @@ const mainContent = document.getElementById("main-content");
 const wordsContainer = document.createElement("div");
 wordsContainer.classList.add("content-words-container");
 
+const errrorsContainer = document.createElement("div");
+errrorsContainer.setAttribute("id", "content-errors-container");
+mainContent.appendChild(errrorsContainer);
+
+let numberOfErrors = 0;
 let stringToType = "";
 let exercises = undefined;
 
@@ -20,8 +25,8 @@ const getData = () =>{
 }
 
 const fillUpWords = () => {
+    stringToType = "";
     if(exercises !== null){
-        console.log("exercises: ", exercises);
         for(let i = 0; i < 20; i++){
             stringToType += exercises[Math.floor(Math.random() * exercises.length + 0)];
             if(i !== 19) stringToType += " ";
@@ -60,6 +65,9 @@ const firstCharBlink = () => {
 }
 
 const mainApp = () => {
+
+    errrorsContainer.innerHTML = `Število napak: <b>${numberOfErrors}</b>`;
+
     const column1 = document.createElement("div");
         column1.setAttribute("id", "words-column-1");
     const column2 = document.createElement("div");
@@ -103,9 +111,15 @@ const mainApp = () => {
             cutSampleString = cutSampleString.substring(1, cutSampleString.length);
             
             if(cutSampleString.length === 0 || cutSampleString === ""){
-                cutSampleString = sampleString;
+                document.getElementById("words-column-1").remove();
+                document.getElementById("words-column-2").remove();
+                document.getElementById("words-container-divider").remove();
+                fillUpWords();
+                numberOfErrors = 0;
+                errrorsContainer.innerHTML = `Število napak: <b>${numberOfErrors}</b>`;
+                /*cutSampleString = sampleString;
                 cutSampleString = cutSampleString.replaceAll(" ", "␣");
-                column1.innerHTML = "";
+                column1.innerHTML = "";*/
             }
 
             column2.innerText = cutSampleString.toUpperCase();
@@ -113,6 +127,8 @@ const mainApp = () => {
             correctFlag = true;
         }else{
             correctFlag = false;
+            numberOfErrors++;
+            errrorsContainer.innerHTML = `Število napak: <b>${numberOfErrors}</b>`;
         }
     });
 

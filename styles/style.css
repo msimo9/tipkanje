@@ -213,7 +213,6 @@ span{
 }
 
 #main-content{
-    margin-top: 100px;
     margin-bottom: 75px;
     font-size: 20px;
     width: 80%;
@@ -222,6 +221,7 @@ span{
     align-items: center;
     letter-spacing: 20px;
     padding: 0 30px;
+    flex-direction: column;
 }
 
 .lessons-container{
@@ -334,6 +334,124 @@ span{
     opacity: 1;
 }
 
+#content-errors-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    margin-top: 25px;
+    margin-bottom: 75px;
+    font-size: 16px;
+    letter-spacing: normal;
+}
+
+#content-errors-container b{
+    margin-left: 5px;
+}
+
+.login-form-container{
+    padding-top: 25px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-form-title-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.form-input-fields-container{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 20%;
+    position: relative;
+}
+
+.form-input-fields-container h3{
+    margin-bottom: 10px;
+}
+
+.form-input-fields-container input{
+    width: 100%;
+    height: 40px;
+    border: 2px solid #395B64;
+    border-radius: 10px;
+    padding: 0 15px;
+    margin-bottom: 25px;
+    transition: all 300ms linear;
+    position: relative;
+    z-index: 4;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.form-input-fields-container div{
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.form-input-fields-container input:hover{
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px #395B64;
+}
+
+#toggle-password-visibility{
+    right: 10px;
+    position: absolute;
+    z-index: 5;
+}
+
+#toggle-password-visibility:hover{
+    cursor: pointer;
+}
+
+.form-submit-button{
+    width: 150px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #2C3333;
+    color: #E7F6F2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 300ms linear;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-submit-button:hover{
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 5px 5px 15px #395B64;
+}
+
+.change-operation-container{
+    margin-top: 20px;   
+}
+
+.change-operation-container b{
+    margin-left: 5px;
+}
+
+.change-operation-container b:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 1200px) {
     .virtual-keyboard-key{
         width: 30px;
@@ -366,6 +484,9 @@ span{
             left: -100%;
         }
     }
+    .form-input-fields-container{
+        width: 40%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -397,5 +518,8 @@ span{
         to{
             left: -100%;
         }
+    }
+    .form-input-fields-container{
+        width: 60%;
     }
 }

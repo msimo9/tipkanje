@@ -51,11 +51,7 @@ const buttons = [
     },
     {
         text: "Prijava",
-        action: ()=>console.log("prijava"),
-    },
-    {
-        text: "Registracija",
-        action: ()=>console.log("registracija"),
+        action: ()=>{window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}login.html`},
     },
     {
         text: "Info",
@@ -83,6 +79,9 @@ headerTitle.innerText = "Tipkanje";
 const loginWrapper = document.createElement("div");
 loginWrapper.setAttribute("id", "loggin-wrapper");
 loginWrapper.innerHTML = "<span>Prijavi se!</span>";
+loginWrapper.addEventListener("click", ()=>{
+    window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}login.html`;
+});
 
 header.appendChild(menuIconWrapper);
 header.appendChild(modalMenu);
