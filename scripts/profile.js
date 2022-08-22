@@ -142,6 +142,7 @@ export const renderProfileScreen = async(uid) =>{
             </div>
         `;
         const changeInfoFields = document.createElement("div");
+        changeInfoFields.style.width = userDataContainer.style.width;
         changeInfoFields.setAttribute("id", "change-info-fields-modal");
         const closeModalIcon = document.createElement("ion-icon");
         closeModalIcon.setAttribute("name", "close-outline");
@@ -157,7 +158,6 @@ export const renderProfileScreen = async(uid) =>{
 
         const changeInfo = document.createElement("h5");
         changeInfo.innerHTML = `Uredi osebne podatke<ion-icon name="brush-outline" />`;
-        changeInfoFields.style.width = userDataContainer.style.width;
         changeInfo.addEventListener("click", ()=>{
             changeInfoFields.style.display = "flex";
         });
