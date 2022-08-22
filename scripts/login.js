@@ -1,16 +1,40 @@
-import {app, auth, db} from './firebase.js';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+import {auth, db} from './firebase.js';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { renderProfileScreen } from './profile.js';
+
+let userID = "";
 
 const checkIfLoggedIn = () =>{
+    document.getElementById("main-container").innerHTML = "";
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
-            console.log("logged in");
+            userID = uid;
+            renderProfileScreen(uid);
         } else {
-            console.log("not logged in");
+            document.title = "Prijava";
             renderFields();
         }
+    });
+}
+
+const handleLogIn = (userData) =>{
+    signInWithEmailAndPassword(auth, userData.email, userData.password)
+    .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+        document.getElementById("main-container").innerHTML = "";
+        //renderProfileScreen(user.uid);
+    })
+    .catch((error) => {
+        document.getElementById("incorrect-info-warning").innerText = "Nepravilni prijavni podatki.";
+        setTimeout(()=>{
+            document.getElementById("incorrect-info-warning").innerText = "";
+        }, 5000);
+        const errorCode = error.code;
+        const errorMessage = error.message;
     });
 }
 
@@ -48,6 +72,7 @@ let userInfo = {
     passwordRepeat: "",
     fullName: "",
     code: "",
+    profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
 }
 
 let operation = "login";
@@ -65,7 +90,7 @@ const renderFields = () =>{
     inputFieldsContainer.classList.add("form-input-fields-container");
 
     Object.keys(userInfo).forEach((item, index) => {
-        if(operation === "login" && index < 2 || operation === "signup"){
+        if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup"){
             const inputFieldTitle = document.createElement("h3");
 
             function appendInfoCircle(){
@@ -134,13 +159,13 @@ const renderFields = () =>{
     warningMessage.setAttribute("id", "incorrect-info-warning");
     submitButton.appendChild(warningMessage);
     submitButton.addEventListener("click", ()=>{
-        if(operation === "signup" && userInfo.password === userInfo.passwordRepeat && userInfo.email.includes("@os-ajdovscina.si") && userInfo.fullName.length !== 0 && userInfo.code.length !== 0){
-            operation === "login" ? null : createAccount(userInfo);
+        if(operation === "signup" && userInfo.password === userInfo.passwordRepeat && userInfo.email.includes("@os-ajdovscina.si") && userInfo.fullName.length !== 0 && userInfo.code.length !== 0 || operation==="login"){
+            operation === "login" ? handleLogIn(userInfo) : createAccount(userInfo);
         }else{
             warningMessage.innerText = "Prosim, izpolni vsa polja pravilno.";
             setTimeout(()=>{
                 warningMessage.innerText = "";
-            }, 5000)
+            }, 5000);
         }
         
     });
@@ -164,7 +189,7 @@ const renderFields = () =>{
     changeOperationContainer.appendChild(changeOperationText);
     formContainer.appendChild(changeOperationContainer);
 
-    document.body.appendChild(formContainer);
+    document.getElementById("main-container").appendChild(formContainer);
 }
 
 //renderFields();

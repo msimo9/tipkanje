@@ -7,8 +7,10 @@ errrorsContainer.setAttribute("id", "content-errors-container");
 mainContent.appendChild(errrorsContainer);
 
 let numberOfErrors = 0;
+let errorFlag = true;
 let stringToType = "";
 let exercises = undefined;
+let tocke = 0;
 
 const getData = () =>{
     exercises = localStorage.getItem('exercises');
@@ -93,7 +95,7 @@ const mainApp = () => {
 
     mainContent.appendChild(wordsContainer);
     
-    window.addEventListener("keydown", (e)=>{
+    window.addEventListener("keypress", (e)=>{
         const currentKey = e.key;
         const currentLetter = cutSampleString.substring(0,1);
         //␣
@@ -102,6 +104,7 @@ const mainApp = () => {
             ||
             currentKey === " " && currentLetter === "␣"
         ){
+            correctFlag = true;
             const charSpan = document.createElement("span");
             charSpan.innerText = cutSampleString.substring(0, 1).toUpperCase();
             charSpan.style.color = correctFlag === true ? "green" : "red";
@@ -123,9 +126,7 @@ const mainApp = () => {
             }
 
             column2.innerText = cutSampleString.toUpperCase();
-            
-            correctFlag = true;
-        }else{
+        }else if(correctFlag){
             correctFlag = false;
             numberOfErrors++;
             errrorsContainer.innerHTML = `Število napak: <b>${numberOfErrors}</b>`;
