@@ -1,8 +1,9 @@
 import {auth, db, storage} from './firebase.js';
-import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged, updateEmail } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import {ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-storage.js";
 
+let currentUser = undefined;
 let userID = "";
 let userInfo = undefined;
 let readerResult = undefined;
@@ -13,6 +14,7 @@ const checkIfLoggedIn = () =>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
+            currentUser = user;
             userID = uid;
         } else {
 
@@ -20,6 +22,22 @@ const checkIfLoggedIn = () =>{
     });
 }
 
+const handleChangeUserInfo = async(fullName, email) =>{
+    const localAuth = getAuth();
+    updateEmail(localAuth.currentUser, email);
+    const updateRef = doc(db, "userInfo", userID);
+    await updateDoc(updateRef, {
+        fullName: fullName,
+        email: email,
+    });
+}
+
+const handleChangeClass = async(newCode) =>{
+    const updateRef = doc(db, "userInfo", userID);
+    await updateDoc(updateRef, {
+        code: newCode,
+    });
+}
 
 const handleSignOut = () =>{
     signOut(auth).then(() => {
@@ -143,28 +161,94 @@ export const renderProfileScreen = async(uid) =>{
         `;
         const changeInfoFields = document.createElement("div");
         changeInfoFields.style.width = userDataContainer.style.width;
+        changeInfoFields.style.display = "none";
         changeInfoFields.setAttribute("id", "change-info-fields-modal");
-        const closeModalIcon = document.createElement("ion-icon");
-        closeModalIcon.setAttribute("name", "close-outline");
-        closeModalIcon.addEventListener("click", ()=>{
+
+        const hideModal = () =>{
             changeInfoFields.style.animation = "hideChangeInfoModal 500ms linear";
+            changeInfoFields.innerHTML = "";
             setTimeout(()=>{
                 changeInfoFields.style.display = "none";
                 changeInfoFields.style.animation = "showChangeInfoModal 500ms linear";
             }, 500);
+        }
+
+        const closeModalIcon = document.createElement("ion-icon");
+        closeModalIcon.setAttribute("name", "close-outline");
+        closeModalIcon.addEventListener("click", ()=>{
+            hideModal();
         });
-        changeInfoFields.appendChild(closeModalIcon);
-
-
+        //
         const changeInfo = document.createElement("h5");
-        changeInfo.innerHTML = `Uredi osebne podatke<ion-icon name="brush-outline" />`;
+        changeInfo.innerHTML = `Spremeni osebne podatke<ion-icon name="brush-outline" />`;
         changeInfo.addEventListener("click", ()=>{
+            if(changeInfoFields.style.display !== "flex"){
             changeInfoFields.style.display = "flex";
+            setTimeout(()=>{
+            changeInfoFields.appendChild(closeModalIcon);
+            //DIV TITLE
+            const divTitle = document.createElement("h3");
+                divTitle.innerText = "Spremeni podatke";
+                changeInfoFields.appendChild(divTitle);
+            //FULL NAME
+            const inputTitle1 = document.createElement("h4");
+            inputTitle1.innerText = "Ime in priimek:";
+            const inputField1 = document.createElement("input");
+            inputField1.setAttribute("placeholder", userInfo.fullName);
+            changeInfoFields.appendChild(inputTitle1);
+            changeInfoFields.appendChild(inputField1);
+            //E-MAIL
+            const inputTitle2 = document.createElement("h4");
+            inputTitle2.innerText = "E-naslov:";
+            const inputField2 = document.createElement("input");
+            inputField2.setAttribute("placeholder", userInfo.email);
+            changeInfoFields.appendChild(inputTitle2);
+            changeInfoFields.appendChild(inputField2);
+
+            const submitChanges = document.createElement("div");
+            submitChanges.innerText = "Potrdi";
+            submitChanges.classList.add("button");
+            submitChanges.addEventListener("click", ()=>{
+                //console.log(inputField1.value," & " ,inputField2.value);
+                handleChangeUserInfo(inputField1.value, inputField2.value);
+                //hideModal();
+                document.getElementById("main-container").innerHTML = "";
+                renderProfileScreen(userID);
+            });
+            changeInfoFields.appendChild(submitChanges);
+            }, 500);
+            }
         });
         const changeClass = document.createElement("h5");
         changeClass.innerHTML = `Spremeni razred<ion-icon name="people-outline" />`;
         changeClass.addEventListener("click", ()=>{
-
+            if(changeInfoFields.style.display !== "flex"){
+            changeInfoFields.style.display = "flex";
+            setTimeout(()=>{
+            changeInfoFields.appendChild(closeModalIcon);
+            //DIV TITLE
+            const divTitle = document.createElement("h3");
+            divTitle.innerText = "Spremeni razred";
+            changeInfoFields.appendChild(divTitle);
+            //FULL NAME
+            const inputTitle1 = document.createElement("h4");
+            inputTitle1.innerText = "Nova koda:";
+            const inputField1 = document.createElement("input");
+            inputField1.setAttribute("placeholder", userInfo.code);
+            changeInfoFields.appendChild(inputTitle1);
+            changeInfoFields.appendChild(inputField1);
+            //SUBMIT BUTTON
+            const submitChanges = document.createElement("div");
+            submitChanges.innerText = "Potrdi";
+            submitChanges.classList.add("button");
+            submitChanges.addEventListener("click", ()=>{
+                handleChangeClass(inputField1.value);
+                document.getElementById("main-container").innerHTML = "";
+                renderProfileScreen(userID);
+            });
+            changeInfoFields.appendChild(submitChanges);
+            }, 500);
+            }
         });
         userDataContainer.appendChild(changeInfo);
         userDataContainer.appendChild(changeClass);
@@ -182,3 +266,5 @@ export const renderProfileScreen = async(uid) =>{
         document.getElementById("main-container").appendChild(profileScreenContainer);
     }
 }
+
+checkIfLoggedIn();

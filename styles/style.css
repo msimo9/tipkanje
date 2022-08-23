@@ -52,7 +52,7 @@ header{
 }
 
 #modal-menu{
-    position: absolute;
+    position: fixed;
     height: 100%;
     width: 200px;
     background-color: #395B64;
@@ -622,12 +622,56 @@ span{
 
 #change-info-fields-modal{
     display: none;
-    height: 200px;
+    height: fit-content;
     background-color: #395B64;
     animation: showChangeInfoModal 500ms linear;
     position: relative;
     border: 2px solid #2C3333;
     box-shadow: 5px 5px 10px #2C3333;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 30px 10px;
+}
+
+#change-info-fields-modal h3{
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 200;
+    color: #E7F6F2;
+    width: 100%;
+}
+
+#change-info-fields-modal h4{
+    margin-bottom: 5px;
+    font-weight: 200;
+    color: #E7F6F2;
+    width: 80%;
+    text-align: left;
+}
+
+#change-info-fields-modal input{
+    margin-bottom: 10px;
+    height: 30px;
+    width: 80%;
+    box-sizing: border-box;
+    padding: 3px 0px 3px 10px;
+}
+
+#change-info-fields-modal div{
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #E7F6F2;
+    color: #395B64;
+    font-weight: 600;
+}
+
+#change-info-fields-modal div:hover{
+    cursor: pointer;
 }
 
 #change-info-fields-modal ion-icon{
