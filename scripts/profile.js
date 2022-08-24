@@ -1,6 +1,6 @@
 import {auth, db, storage} from './firebase.js';
 import { getAuth, signOut, onAuthStateChanged, updateEmail } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
-import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { doc, getDoc, updateDoc, addDoc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import {ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-storage.js";
 
 let currentUser = undefined;
@@ -53,6 +53,34 @@ const updateImageUrl = async(url) =>{
     const updateRef = doc(db, "userInfo", userID);
     await updateDoc(updateRef, {
         profileImageURL: url,
+    });
+}
+
+const addClass = async(allCodes, index, item) => {
+    await setDoc(doc(db, "classCodes", allCodes[index].toString()), {
+        code: allCodes[index].toString(),
+        class: item,
+        teacherCode: allCodes[100-index].toString(),
+    });
+}
+
+const deleteClass = async(docID) =>{
+    await deleteDoc(doc(db, "classCodes", docID));
+}
+
+const addCodesToFirebase = async(allCodes) =>{
+    const querySnapshot = await getDocs(collection(db, "classCodes"));
+    querySnapshot.forEach((doc) => {
+        deleteClass(doc.id);
+    });
+    let allClasses = [];
+    for(let i = 1; i <= 9; i++){
+        for(let j = 0; j < 3; j++){
+            allClasses.push(`${i}${j===0?"A":j===1?"B":"C"}`);
+        }
+    }
+    allClasses.forEach((item, index) => {
+        addClass(allCodes, index, item);
     });
 }
 
@@ -145,7 +173,7 @@ export const renderProfileScreen = async(uid) =>{
         profilePictureContainer.appendChild(profilePicture);
         profileScreenContainer.appendChild(profilePictureContainer);
 
-        profilePictureContainer.addEventListener("click", ()=>{
+        profilePicture.addEventListener("click", ()=>{
             handleFilePicker();
         });
 
@@ -182,7 +210,7 @@ export const renderProfileScreen = async(uid) =>{
         const changeInfo = document.createElement("h5");
         changeInfo.innerHTML = `Spremeni osebne podatke<ion-icon name="brush-outline" />`;
         changeInfo.addEventListener("click", ()=>{
-            if(changeInfoFields.style.display !== "flex"){
+            changeInfoFields.innerHTML = "";
             changeInfoFields.style.display = "flex";
             setTimeout(()=>{
             changeInfoFields.appendChild(closeModalIcon);
@@ -217,12 +245,11 @@ export const renderProfileScreen = async(uid) =>{
             });
             changeInfoFields.appendChild(submitChanges);
             }, 500);
-            }
         });
         const changeClass = document.createElement("h5");
         changeClass.innerHTML = `Spremeni razred<ion-icon name="people-outline" />`;
         changeClass.addEventListener("click", ()=>{
-            if(changeInfoFields.style.display !== "flex"){
+            changeInfoFields.innerHTML = "";
             changeInfoFields.style.display = "flex";
             setTimeout(()=>{
             changeInfoFields.appendChild(closeModalIcon);
@@ -248,7 +275,6 @@ export const renderProfileScreen = async(uid) =>{
             });
             changeInfoFields.appendChild(submitChanges);
             }, 500);
-            }
         });
         userDataContainer.appendChild(changeInfo);
         userDataContainer.appendChild(changeClass);
@@ -262,6 +288,59 @@ export const renderProfileScreen = async(uid) =>{
         signOutButton.addEventListener("click", ()=>{handleSignOut()});
         profileScreenContainer.appendChild(signOutButton);
 
+        if(userInfo.admin || userInfo.teacher){
+            const additionalContentContainer = document.createElement("div");
+            additionalContentContainer.classList.add("additional-content-container");
+            
+
+            if(userInfo.teacher){
+                additionalContentContainer.innerHTML += "<h3>Teacher portal</h3>";
+
+            }
+
+
+            if(userInfo.admin){
+                additionalContentContainer.innerHTML += "<h3>Admin portal</h3>";
+
+                const allTeachersText = document.createElement("div");
+                allTeachersText.classList.add("admin-action-text");
+                allTeachersText.innerHTML = "preglej vse učitelje!";
+
+                const allPupilsText = document.createElement("div");
+                allPupilsText.classList.add("admin-action-text");
+                allPupilsText.innerHTML = "preglej vse učence!";
+
+                const generateCodesText = document.createElement("div");
+                generateCodesText.classList.add("admin-action-text");
+                generateCodesText.innerHTML = "generiraj nove kode!";
+
+                const generateNewCodes = () =>{
+                    let codes = [];
+                    let availableChars = "WERTZUIOPASDFGHJKLYXCVBNM1234567890";
+                    for(let i=0; i < 100; i++){
+                        let newCode = "";
+                        for(let j=0; j<8; j++){
+                            newCode += availableChars.charAt(Math.floor(Math.random()*availableChars.length + 0));
+                        }
+                        if(codes.indexOf(newCode) === -1){
+                            codes.push(newCode);
+                        }else{
+                            i--;
+                        }
+                    }
+                    addCodesToFirebase(codes);
+                    console.log("ALL CODES: ", codes);
+                }
+                generateCodesText.addEventListener("click", ()=>{
+                    generateNewCodes();
+                });
+                additionalContentContainer.appendChild(allTeachersText);
+                additionalContentContainer.appendChild(allPupilsText);
+                additionalContentContainer.appendChild(generateCodesText);
+            }
+
+            profileScreenContainer.appendChild(additionalContentContainer);
+        }
 
         document.getElementById("main-container").appendChild(profileScreenContainer);
     }

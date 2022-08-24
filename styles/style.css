@@ -128,8 +128,9 @@ header{
 }
 
 #loggin-wrapper img{
-    width: 20px;
-    height: 20px;
+    object-fit: cover;
+    width: 40px;
+    height: 40px;
     border-radius: 100%;
     border: 2px solid #A5C9CA;
     margin-left: 5px;
@@ -679,6 +680,43 @@ span{
     cursor: pointer;
 }
 
+.additional-content-container{
+    width: 40%;
+    height: fit-content;
+    padding: 20px;
+    background-color: #2C3333;
+    margin-top: 50px;
+    border-radius: 10px;
+    color: #E7F6F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.additional-content-container h3{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.admin-action-text{
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #E7F6F2;
+    color: #2C3333;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.admin-action-text:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 @keyframes showChangeInfoModal {
     from{
         height: 0px;
@@ -731,6 +769,9 @@ span{
     .form-input-fields-container{
         width: 40%;
     }
+    .additional-content-container{
+        width: 60%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -768,5 +809,8 @@ span{
     }
     #loggin-wrapper span{
         display: none;
+    }
+    .additional-content-container{
+        width: 80%;
     }
 }
