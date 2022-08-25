@@ -296,19 +296,43 @@ export const renderProfileScreen = async(uid) =>{
             if(userInfo.teacher){
                 additionalContentContainer.innerHTML += "<h3>Teacher portal</h3>";
 
+                const addHomework = document.createElement("div");
+                addHomework.classList.add("admin-action-text");
+                addHomework.innerHTML = "dodeli domačo nalogo!";
+
+                const showPupilActivity = document.createElement("div");
+                showPupilActivity.classList.add("admin-action-text");
+                showPupilActivity.innerHTML = "preglej aktivnost učencev!";
+
+                const seeAndManagePupils = document.createElement("div");
+                seeAndManagePupils.classList.add("admin-action-text");
+                seeAndManagePupils.innerHTML = "preglej in upravljaj učence!";
+
+                additionalContentContainer.appendChild(addHomework);
+                additionalContentContainer.appendChild(showPupilActivity);
+                additionalContentContainer.appendChild(seeAndManagePupils);
             }
 
 
             if(userInfo.admin){
                 additionalContentContainer.innerHTML += "<h3>Admin portal</h3>";
 
+                const openAdminPage = (option) =>{
+                    window.location = `./admin.html?option=${option}`;
+                }
+
                 const allTeachersText = document.createElement("div");
                 allTeachersText.classList.add("admin-action-text");
                 allTeachersText.innerHTML = "preglej vse učitelje!";
-
+                allTeachersText.addEventListener("click", ()=>{
+                    openAdminPage(1);
+                });
                 const allPupilsText = document.createElement("div");
                 allPupilsText.classList.add("admin-action-text");
                 allPupilsText.innerHTML = "preglej vse učence!";
+                allPupilsText.addEventListener("click", ()=>{
+                    openAdminPage(2);
+                });
 
                 const generateCodesText = document.createElement("div");
                 generateCodesText.classList.add("admin-action-text");
@@ -334,6 +358,7 @@ export const renderProfileScreen = async(uid) =>{
                 generateCodesText.addEventListener("click", ()=>{
                     generateNewCodes();
                 });
+
                 additionalContentContainer.appendChild(allTeachersText);
                 additionalContentContainer.appendChild(allPupilsText);
                 additionalContentContainer.appendChild(generateCodesText);

@@ -38,6 +38,10 @@ header{
     color: #E7F6F2;
 }
 
+header h1:hover{
+    cursor: pointer;
+}
+
 #menu-icon{
     position: absolute;
     left: 10px;
@@ -696,13 +700,13 @@ span{
 
 .additional-content-container h3{
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .admin-action-text{
-    margin-top: 10px;
+    margin-bottom: 15px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 300;
     background-color: #E7F6F2;
     color: #2C3333;
     padding: 10px 20px;
@@ -711,10 +715,69 @@ span{
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 100ms linear;
 }
 .admin-action-text:hover{
     cursor: pointer;
-    text-decoration: underline;
+    background-color: #A5C9CA;
+    font-weight: 600;
+    margin-left: 15px;
+}
+
+.admin-content-wrapper{
+    color: #395B64;
+    width: 100%;
+    height: fit-content;
+    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.admin-content-search-field-wrapper{
+    width: 30%;
+    position: relative;
+    margin-top: 20px;
+    color: #E7F6F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+#admin-content-search-icon{
+    position: absolute;
+    left: 10px;
+    font-size: 25px;
+    color: #E7F6F2;
+}
+
+.admin-content-search-field{
+    height: 50px;
+    width: 100%;
+    background-color: #395B64;
+    border-radius: 20px;
+    padding-left: 40px;
+    color: #E7F6F2;
+    font-size: 14px;
+    outline: none;
+    border: 2px solid #E7F6F2;
+}
+
+.admin-content-search-field::placeholder{
+    font-weight: 300;
+    color: #E7F6F2;
+}
+
+.admin-content-subcontent{
+    width: 40%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0.5px solid red;
+    margin-top: 20px;
 }
 
 @keyframes showChangeInfoModal {
@@ -772,6 +835,9 @@ span{
     .additional-content-container{
         width: 60%;
     }
+    .admin-action-text{
+        width: 50%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -812,5 +878,8 @@ span{
     }
     .additional-content-container{
         width: 80%;
+    }
+    .admin-action-text{
+        width: 70%;
     }
 }

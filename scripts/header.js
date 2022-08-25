@@ -123,6 +123,7 @@ buttons.forEach(item => {
 
 const headerTitle = document.createElement("h1");
 headerTitle.innerText = "Tipkanje";
+headerTitle.addEventListener("click", ()=> {window.location = `.${pageTitle !== "DPT" ? "." : ""}/index.html`});
 
 header.appendChild(menuIconWrapper);
 header.appendChild(modalMenu);
