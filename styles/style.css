@@ -772,12 +772,75 @@ span{
 
 .admin-content-subcontent{
     width: 40%;
-    height: 200px;
+    height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-color: #395B64;
+    display: flex;
+    border: 2px solid #395B64;
+    flex-direction: column;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.admin-content-subcontent::-webkit-scrollbar{
+    display: none;
+}
+
+.subcontent-first-row{
+    margin-top: 20px;
+    width: 40%;
+    height: 20px;
+    display: flex;
+    border: 2px solid #395B64;
+    background-color: #395B64;
+    color: #E7F6F2;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.first-row-col{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#first-row-col-1{
+    width: 10%;
+}
+#first-row-col-2{
+    display: flex;
+    justify-content: flex-start;
+    width: 60%;
+}
+#first-row-col-3{
+    width: 20%;
+}
+#first-row-col-4{
+    width: 10%;
+}
+
+.subcontent-user-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: #2C3333;
+    color: #E7F6F2;
+    padding: 10px 0;
+    margin: 5px 0;
+    transition: all 100ms linear;
+}
+
+.subcontent-user-wrapper div{
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.5px solid red;
-    margin-top: 20px;
+}
+
+.subcontent-user-wrapper:hover{
+    background-color: #395B64;
+    color: #E7F6F2;
 }
 
 @keyframes showChangeInfoModal {

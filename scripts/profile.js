@@ -16,6 +16,7 @@ const checkIfLoggedIn = () =>{
             const uid = user.uid;
             currentUser = user;
             userID = uid;
+            renderProfileScreen(userID);
         } else {
 
         }
@@ -157,6 +158,8 @@ export const renderProfileScreen = async(uid) =>{
     const docRef = doc(db, "userInfo", userID);
     const docSnap = await getDoc(docRef);
 
+    document.getElementById("main-container").innerHTML = "";
+
     if (docSnap.exists()) {
         userInfo = docSnap.data();
 
@@ -184,7 +187,7 @@ export const renderProfileScreen = async(uid) =>{
             <div>
                 <span>Ime in priimek: <b>${userInfo.fullName}</b></span> 
                 <span>E-poštni naslov: <b>${userInfo.email}</b></span> 
-                <span>Razred: <b>3. b</b></span> 
+                <span>Razred: <b>${userInfo.class}</b></span> 
             </div>
         `;
         const changeInfoFields = document.createElement("div");

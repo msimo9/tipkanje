@@ -1,6 +1,6 @@
 import {auth, db} from './firebase.js';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import { renderProfileScreen } from './profile.js';
 
 let userID = "";
@@ -38,7 +38,7 @@ const handleLogIn = (userData) =>{
     });
 }
 
-const addUserData = async(userID, userData) => {
+const addUserData = async(userID, userData, className) => {
     await setDoc(doc(db, "userInfo", userID), {
         userID: userID,
         email: userData.email,
@@ -46,14 +46,29 @@ const addUserData = async(userID, userData) => {
         code: userData.code,
         lessonsDone: [],
         timeSpentTyping: 0,
+        class: className,
+        profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
     });
+    window.location = "../pages/profile.html";
+}
+
+const getClass = async(uid, userData) =>{
+    let classCodes = [];
+    let className = "";
+    const querySnapshot = await getDocs(collection(db, "classCodes"));
+    querySnapshot.forEach((doc) => {
+        if(doc.id.toString() === userData.code.toString()){
+            className = doc.data().class;
+        }
+    });
+    addUserData(uid, userData, className);
 }
 
 const createAccount = (userData) =>{
     createUserWithEmailAndPassword(auth, userData.email, userData.password)
     .then((userCredential) => {
         const user = userCredential.user;
-        addUserData(user.uid, userData);
+        getClass(user.uid, userData);
         console.log("sign up successful!")
     })
     .catch((error) => {
@@ -90,7 +105,7 @@ const renderFields = () =>{
     inputFieldsContainer.classList.add("form-input-fields-container");
 
     Object.keys(userInfo).forEach((item, index) => {
-        if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup"){
+        if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup" && index < 5){
             const inputFieldTitle = document.createElement("h3");
 
             function appendInfoCircle(){
