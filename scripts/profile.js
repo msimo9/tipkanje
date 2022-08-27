@@ -160,7 +160,7 @@ export const renderProfileScreen = async(uid) =>{
 
     document.getElementById("main-container").innerHTML = "";
 
-    if (docSnap.exists()) {
+    if (docSnap.exists() && !docSnap.data().banned) {
         userInfo = docSnap.data();
 
         const profileScreenContainer = document.createElement("div");

@@ -790,7 +790,7 @@ span{
 .subcontent-first-row{
     margin-top: 20px;
     width: 40%;
-    height: 20px;
+    height: 40px;
     display: flex;
     border: 2px solid #395B64;
     background-color: #395B64;
@@ -806,6 +806,14 @@ span{
     align-items: center;
 }
 
+.first-row-col ion-icon{
+    margin-left: 3px;
+    font-size: 12px;
+}
+.first-row-col ion-icon:hover{
+    cursor: pointer;
+}
+
 #first-row-col-1{
     width: 10%;
 }
@@ -819,6 +827,10 @@ span{
 }
 #first-row-col-4{
     width: 10%;
+}
+
+#manage-icon:hover{
+    cursor: pointer;
 }
 
 .subcontent-user-wrapper{

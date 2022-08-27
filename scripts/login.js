@@ -1,14 +1,16 @@
 import {auth, db} from './firebase.js';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
-import { doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+import { doc, setDoc, getDocs, collection, getDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import { renderProfileScreen } from './profile.js';
 
 let userID = "";
 
+let isUserBanned = false;
+
 const checkIfLoggedIn = () =>{
     document.getElementById("main-container").innerHTML = "";
     onAuthStateChanged(auth, (user) => {
-        if (user) {
+        if (user && !isUserBanned) {
             const uid = user.uid;
             userID = uid;
             renderProfileScreen(uid);
@@ -19,13 +21,33 @@ const checkIfLoggedIn = () =>{
     });
 }
 
+const handleSignOut = () =>{
+    signOut(auth).then(() => {
+        window.location = "../pages/login.html";
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+const checkIfBanned = async(userID) => {
+    const docRef = doc(db, "userInfo", userID.toString());
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      if(docSnap.data().banned){
+        isUserBanned = true;
+        handleSignOut();
+      }else{
+        isUserBanned = false;
+      }
+    }
+}
+
 const handleLogIn = (userData) =>{
     signInWithEmailAndPassword(auth, userData.email, userData.password)
     .then((userCredential) => {
-        // Signed in 
         const user = userCredential.user;
-        // ...
         document.getElementById("main-container").innerHTML = "";
+        checkIfBanned(user.uid);
         //renderProfileScreen(user.uid);
     })
     .catch((error) => {
