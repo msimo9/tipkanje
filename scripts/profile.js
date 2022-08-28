@@ -58,10 +58,12 @@ const updateImageUrl = async(url) =>{
 }
 
 const addClass = async(allCodes, index, item) => {
-    await setDoc(doc(db, "classCodes", allCodes[index].toString()), {
+    console.log("current class: ", item);
+    console.log("current index: ", index);
+    await setDoc(doc(db, "classCodes", item+"-"+allCodes[index].toString()), {
         code: allCodes[index].toString(),
         class: item,
-        teacherCode: allCodes[100-index].toString(),
+        teacherCode: allCodes[99-index].toString(),
     });
 }
 
@@ -77,7 +79,7 @@ const addCodesToFirebase = async(allCodes) =>{
     let allClasses = [];
     for(let i = 1; i <= 9; i++){
         for(let j = 0; j < 3; j++){
-            allClasses.push(`${i}${j===0?"A":j===1?"B":"C"}`);
+            allClasses.push(`${i}${j===0 ?"A" : j===1 ? "B" : "C" }`);
         }
     }
     allClasses.forEach((item, index) => {
@@ -295,19 +297,38 @@ export const renderProfileScreen = async(uid) =>{
             const additionalContentContainer = document.createElement("div");
             additionalContentContainer.classList.add("additional-content-container");
             
+            console.log("checkpoint 1");
 
             if(userInfo.teacher){
                 additionalContentContainer.innerHTML += "<h3>Teacher portal</h3>";
+                console.log("checkpoint 2");
+                const openTeacherPage = (option) => {
+                    console.log("checkpoint 4");
+                    window.location = `./teacher.html?option=${option}`;
+                }
 
                 const addHomework = document.createElement("div");
+                addHomework.addEventListener("click", ()=>{
+                    console.log("ne štekam 2");
+                });
+
                 addHomework.classList.add("admin-action-text");
+                addHomework.setAttribute("id", "add-homework");
                 addHomework.innerHTML = "dodeli domačo nalogo!";
 
                 const showPupilActivity = document.createElement("div");
                 showPupilActivity.classList.add("admin-action-text");
                 showPupilActivity.innerHTML = "preglej aktivnost učencev!";
+                showPupilActivity.addEventListener("click", ()=>{
+                    console.log("checkpoint 3");
+                    openTeacherPage(2);
+                });
 
                 const seeAndManagePupils = document.createElement("div");
+                seeAndManagePupils.addEventListener("click", ()=>{
+                    console.log("checkpoint 3");
+                    openTeacherPage(3);
+                });
                 seeAndManagePupils.classList.add("admin-action-text");
                 seeAndManagePupils.innerHTML = "preglej in upravljaj učence!";
 
@@ -371,6 +392,10 @@ export const renderProfileScreen = async(uid) =>{
         }
 
         document.getElementById("main-container").appendChild(profileScreenContainer);
+
+        document.getElementById("add-homework").addEventListener("click", ()=>{
+            console.log("ne štekam 1");
+        });
     }
 }
 

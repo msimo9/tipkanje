@@ -717,6 +717,7 @@ span{
     align-items: center;
     transition: all 100ms linear;
 }
+
 .admin-action-text:hover{
     cursor: pointer;
     background-color: #A5C9CA;
@@ -829,8 +830,17 @@ span{
     width: 10%;
 }
 
+#manage-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #manage-icon:hover{
     cursor: pointer;
+}
+
+ion-icon{
+    pointer-events: none;
 }
 
 .subcontent-user-wrapper{
@@ -913,6 +923,18 @@ span{
     .admin-action-text{
         width: 50%;
     }
+    .subcontent-first-row{
+        width: 60%;
+    }
+    .admin-content-subcontent{
+        width: 60%;
+    }
+    #first-row-col-2{
+        width: 50%;
+    }
+    .admin-content-search-field-wrapper {
+        width: 50%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -955,6 +977,18 @@ span{
         width: 80%;
     }
     .admin-action-text{
+        width: 70%;
+    }
+    .subcontent-first-row{
+        width: 80%;
+    }
+    .admin-content-subcontent{
+        width: 80%;
+    }
+    #first-row-col-2{
+        width: 50%;
+    }
+    .admin-content-search-field-wrapper {
         width: 70%;
     }
 }

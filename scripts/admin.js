@@ -148,7 +148,9 @@ const renderContent = () =>{
 
             const trashIcon = document.createElement("div");
             trashIcon.innerHTML = `
+            <span id="manage-icon" title="${item.banned ? "Odblokiraj" : "Blokiraj"} osebo.">
             <ion-icon id="manage-icon" name=${!item.banned ? "ban-outline" : "checkmark-outline"} />
+            </span>
             `;
             trashIcon.addEventListener("click", ()=>{
                 if(!item.banned){
@@ -160,9 +162,11 @@ const renderContent = () =>{
 
             const handleTeacherIcon = document.createElement("div");
             handleTeacherIcon.style.marginLeft = "3px";
+            handleTeacherIcon.style.position = "relative";
             handleTeacherIcon.innerHTML = `
-            <ion-icon id="manage-icon" name=${!item.teacher ? "person-add-outline" : "person-remove-outline"} />
-            `;
+            <span id="manage-icon" title="${!item.teacher ? "Dodaj k učiteljem" : "Odstrani od učiteljev"}."><ion-icon id="manage-icon" name=${!item.teacher ? "person-add-outline" : "person-remove-outline"} >
+            </ion-icon></span>`;
+            
             handleTeacherIcon.addEventListener("click", ()=>{
                 if(!item.teacher){
                     addToTeachers(item.userID);
