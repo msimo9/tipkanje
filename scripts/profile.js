@@ -49,8 +49,6 @@ const handleSignOut = () =>{
 }
 
 const updateImageUrl = async(url) =>{
-
-    console.log(userID);
     const updateRef = doc(db, "userInfo", userID);
     await updateDoc(updateRef, {
         profileImageURL: url,
@@ -58,8 +56,6 @@ const updateImageUrl = async(url) =>{
 }
 
 const addClass = async(allCodes, index, item) => {
-    console.log("current class: ", item);
-    console.log("current index: ", index);
     await setDoc(doc(db, "classCodes", item+"-"+allCodes[index].toString()), {
         code: allCodes[index].toString(),
         class: item,
@@ -90,7 +86,6 @@ const addCodesToFirebase = async(allCodes) =>{
 const uploadPhoto = (file) =>{
     const uploadRef = ref(storage, `/userPhotos/${userID}`);
     uploadString(uploadRef, file, 'data_url').then((snapshot) => {
-        console.log("profile pic uploaded!");
         getDownloadURL(ref(uploadRef))
         .then((url) => {
             document.getElementById("profile-screen-photo").setAttribute("src", url);
@@ -242,9 +237,7 @@ export const renderProfileScreen = async(uid) =>{
             submitChanges.innerText = "Potrdi";
             submitChanges.classList.add("button");
             submitChanges.addEventListener("click", ()=>{
-                //console.log(inputField1.value," & " ,inputField2.value);
                 handleChangeUserInfo(inputField1.value, inputField2.value);
-                //hideModal();
                 document.getElementById("main-container").innerHTML = "";
                 renderProfileScreen(userID);
             });
@@ -297,40 +290,23 @@ export const renderProfileScreen = async(uid) =>{
             const additionalContentContainer = document.createElement("div");
             additionalContentContainer.classList.add("additional-content-container");
             
-            console.log("checkpoint 1");
-
             if(userInfo.teacher){
                 additionalContentContainer.innerHTML += "<h3>Teacher portal</h3>";
-                console.log("checkpoint 2");
-                const openTeacherPage = (option) => {
-                    console.log("checkpoint 4");
-                    window.location = `./teacher.html?option=${option}`;
-                }
 
                 const addHomework = document.createElement("div");
-                addHomework.addEventListener("click", ()=>{
-                    console.log("ne štekam 2");
-                });
-
                 addHomework.classList.add("admin-action-text");
                 addHomework.setAttribute("id", "add-homework");
                 addHomework.innerHTML = "dodeli domačo nalogo!";
 
                 const showPupilActivity = document.createElement("div");
                 showPupilActivity.classList.add("admin-action-text");
+                showPupilActivity.setAttribute("id", "show-pupil-activity");
                 showPupilActivity.innerHTML = "preglej aktivnost učencev!";
-                showPupilActivity.addEventListener("click", ()=>{
-                    console.log("checkpoint 3");
-                    openTeacherPage(2);
-                });
 
                 const seeAndManagePupils = document.createElement("div");
-                seeAndManagePupils.addEventListener("click", ()=>{
-                    console.log("checkpoint 3");
-                    openTeacherPage(3);
-                });
                 seeAndManagePupils.classList.add("admin-action-text");
                 seeAndManagePupils.innerHTML = "preglej in upravljaj učence!";
+                seeAndManagePupils.setAttribute("id", "see-manage-pupils");
 
                 additionalContentContainer.appendChild(addHomework);
                 additionalContentContainer.appendChild(showPupilActivity);
@@ -377,7 +353,6 @@ export const renderProfileScreen = async(uid) =>{
                         }
                     }
                     addCodesToFirebase(codes);
-                    console.log("ALL CODES: ", codes);
                 }
                 generateCodesText.addEventListener("click", ()=>{
                     generateNewCodes();
@@ -393,8 +368,18 @@ export const renderProfileScreen = async(uid) =>{
 
         document.getElementById("main-container").appendChild(profileScreenContainer);
 
+        const openTeacherPage = (option) => {
+            window.location = `./teacher.html?option=${option}`;
+        }
+
         document.getElementById("add-homework").addEventListener("click", ()=>{
-            console.log("ne štekam 1");
+            openTeacherPage(1);
+        });
+        document.getElementById("show-pupil-activity").addEventListener("click", ()=>{
+            openTeacherPage(2);
+        });
+        document.getElementById("see-manage-pupils").addEventListener("click", ()=>{
+            openTeacherPage(3);
         });
     }
 }

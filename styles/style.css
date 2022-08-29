@@ -865,6 +865,48 @@ ion-icon{
     color: #E7F6F2;
 }
 
+.teacher-content-wrapper{
+    width: 100%;
+    height: fit-content;
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.teacher-fields-wrapper{
+    width: 40%;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.teacher-fields-wrapper h4{
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+#add-homework-title-field{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#add-homework-title-field ion-icon{
+    margin-left: 3px;
+}
+
+#teacher-add-homework-area{
+    width: 100%;
+    padding: 10px 10px;
+    resize: none;
+    height: 200px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 2px solid #395B64;
+    font-size: 16px;
+}
+
 @keyframes showChangeInfoModal {
     from{
         height: 0px;
@@ -935,6 +977,9 @@ ion-icon{
     .admin-content-search-field-wrapper {
         width: 50%;
     }
+    .teacher-fields-wrapper{
+        width: 60%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -990,5 +1035,8 @@ ion-icon{
     }
     .admin-content-search-field-wrapper {
         width: 70%;
+    }
+    .teacher-fields-wrapper{
+        width: 80%;
     }
 }

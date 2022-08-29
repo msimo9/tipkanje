@@ -8,7 +8,6 @@ let userID = "";
 
 onAuthStateChanged(auth, (user) => {
     if(document.getElementById("loggin-wrapper")){
-        console.log("???")
         document.getElementById("loggin-wrapper").remove();
     }
     if (user) {
@@ -23,7 +22,6 @@ onAuthStateChanged(auth, (user) => {
 const getUserData = async(userID, loggedIn) =>{
     const loginWrapper = document.createElement("div");
     loginWrapper.setAttribute("id", "loggin-wrapper");
-    console.log("logged in: ", loggedIn)
     if(loggedIn){
         const docRef = doc(db, "userInfo", userID);
         const docSnap = await getDoc(docRef);
