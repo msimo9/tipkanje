@@ -580,6 +580,28 @@ span{
     box-shadow: 5px 5px 15px #395B64;
 }
 
+#teacher-checkbox{
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    -o-appearance:none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #395B64;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    -webkit-box-shadow: 0px 0px 0px 1px #395B64;
+    -moz-box-shadow: 0px 0px 0px 1px #395B64;
+    box-shadow: 0px 0px 0px 1px #395B64;
+}
+
+#teacher-checkbox:checked{
+    background-color: #395B64;
+    color: black !important;
+}
+
 #toggle-password-visibility{
     right: 10px;
     position: absolute;
@@ -905,6 +927,63 @@ ion-icon{
     border-radius: 10px;
     border: 2px solid #395B64;
     font-size: 16px;
+}
+
+.teacher-manage-pupils-wrapper{
+    width: 40%;
+    height: 500px;
+    border: 2px solid #395B64;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.teacher-manage-pupils-wrapper::-webkit-scrollbar{
+    display: none;
+}
+
+#add-pupil-to-class{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+#add-pupil-to-class:hover{
+    cursor: pointer;
+}
+
+.my-pupils-container{
+    width: 40%;
+    height: 200px;
+    border: 2px solid #395B64;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.my-pupils-container::-webkit-scrollbar{
+    display: none;
+}
+
+.my-pupils-container h4{
+    box-sizing: border-box;
+    font-weight: 300;
+    width: 100%;
+    color: #E7F6F2;
+    background-color: #395B64;
+    padding: 15px 0;
+    border: 2px solid #395B64;
+    text-align: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 @keyframes showChangeInfoModal {

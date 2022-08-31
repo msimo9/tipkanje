@@ -128,34 +128,40 @@ const renderFields = () =>{
 
     Object.keys(userInfo).forEach((item, index) => {
         if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup" && index < 5){
-            const inputFieldTitle = document.createElement("h3");
 
-            function appendInfoCircle(){
-                const infoDiv = document.createElement("div");
-                infoDiv.setAttribute("id", "code-information-div");
-                infoDiv.innerText = "Kodo ti priskrbi učitelijca ali učitelj. Brez pravilne in ustrezne kode registracija računa ni mogoča.";
-                const infoIcon = document.createElement("ion-icon");
-                infoIcon.setAttribute("name", "information-circle-outline");
-                infoIcon.setAttribute("id", "code-information-icon");
-                infoIcon.addEventListener("mouseenter", ()=>{
-                    infoDiv.style.display = "flex";
-                });
-                infoIcon.addEventListener("mouseleave", ()=>{
-                    infoDiv.style.display = "none";
-                });
-                inputFieldTitle.appendChild(infoIcon);
-                inputFieldTitle.appendChild(infoDiv);
+            if(operation === "signup" && index === 4){
+                const inputFieldTitle = document.createElement("h3");
+                inputFieldTitle.innerText = "Učitelj?"
+                const teacherCheckbox = document.createElement("input");
+                teacherCheckbox.setAttribute("type", "checkbox");
+                teacherCheckbox.setAttribute("id", "teacher-checkbox");
+                teacherCheckbox.addEventListener("click", ()=>{
+                    if(teacherCheckbox.checked){
+                        document.getElementById("code-field-title").style.display = "flex";
+                        document.getElementById("code-field").style.display = "flex";
+                    }else{
+                        document.getElementById("code-field-title").style.display = "none";
+                        document.getElementById("code-field").style.display = "none";
+                    }
+                })
+                inputFieldsContainer.appendChild(inputFieldTitle);
+                inputFieldsContainer.appendChild(teacherCheckbox);
             }
+
+            const inputFieldTitle = document.createElement("h3");
 
             switch(index){
                 case 0: inputFieldTitle.innerText = "Elektronski naslov"; break;
                 case 1: inputFieldTitle.innerText = "Geslo"; break;
                 case 2: inputFieldTitle.innerText = "Ponovi geslo"; break;
                 case 3: inputFieldTitle.innerText = "Ime in priimek"; break;
-                case 4: inputFieldTitle.innerHTML = "Koda"; appendInfoCircle(); break;
+                case 4: inputFieldTitle.innerHTML = "Koda"; break;
                 default: break;
             }
-
+            if(index === 4){
+                inputFieldTitle.setAttribute("id", "code-field-title");
+                inputFieldTitle.style.display = "none";
+            }
             inputFieldsContainer.appendChild(inputFieldTitle);
             const inputField = document.createElement("input");
             inputField.addEventListener("keyup", ()=>{
@@ -164,7 +170,7 @@ const renderFields = () =>{
             if(index === 1 || index === 2){
                 const passwordWrapper = document.createElement("div");
                 inputField.setAttribute("type", "password");
-                const eyeIcon = document.createElement("ion-icon");
+                /*const eyeIcon = document.createElement("ion-icon");
                 eyeIcon.setAttribute("name", "eye-outline");
                 eyeIcon.setAttribute("id", "toggle-password-visibility");
                 eyeIcon.addEventListener("click", ()=>{
@@ -175,12 +181,16 @@ const renderFields = () =>{
                         eyeIcon.setAttribute("name", "eye-outline");
                         inputField.setAttribute("type", "password");
                     }
-                });
+                });*/
                 inputField.style.marginBottom = "0px";
-                passwordWrapper.appendChild(eyeIcon);
+                //passwordWrapper.appendChild(eyeIcon);
                 passwordWrapper.appendChild(inputField);
                 inputFieldsContainer.appendChild(passwordWrapper);
             }else{
+                if(index === 4){
+                    inputField.setAttribute("id", "code-field");
+                    inputField.style.display = "none";
+                }
                 inputFieldsContainer.appendChild(inputField);
             }
         }
@@ -196,7 +206,7 @@ const renderFields = () =>{
     warningMessage.setAttribute("id", "incorrect-info-warning");
     submitButton.appendChild(warningMessage);
     submitButton.addEventListener("click", ()=>{
-        if(operation === "signup" && userInfo.password === userInfo.passwordRepeat && userInfo.email.includes("@os-ajdovscina.si") && userInfo.fullName.length !== 0 && userInfo.code.length !== 0 || operation==="login"){
+        if(operation === "signup" && userInfo.password === userInfo.passwordRepeat && userInfo.email.includes("@os-ajdovscina.si") && userInfo.fullName.length !== 0 || operation==="login"){
             operation === "login" ? handleLogIn(userInfo) : createAccount(userInfo);
         }else{
             warningMessage.innerText = "Prosim, izpolni vsa polja pravilno.";
