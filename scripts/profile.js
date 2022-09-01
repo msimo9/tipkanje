@@ -371,16 +371,17 @@ export const renderProfileScreen = async(uid) =>{
         const openTeacherPage = (option) => {
             window.location = `./teacher.html?option=${option}`;
         }
-
-        document.getElementById("add-homework").addEventListener("click", ()=>{
-            openTeacherPage(1);
-        });
-        document.getElementById("show-pupil-activity").addEventListener("click", ()=>{
-            openTeacherPage(2);
-        });
-        document.getElementById("see-manage-pupils").addEventListener("click", ()=>{
-            openTeacherPage(3);
-        });
+        if(userInfo.teacher){
+            document.getElementById("add-homework").addEventListener("click", ()=>{
+                openTeacherPage(1);
+            });
+            document.getElementById("show-pupil-activity").addEventListener("click", ()=>{
+                openTeacherPage(2);
+            });
+            document.getElementById("see-manage-pupils").addEventListener("click", ()=>{
+                openTeacherPage(3);
+            });
+        }
     }
 }
 

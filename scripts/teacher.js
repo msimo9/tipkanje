@@ -4,6 +4,7 @@ import { collection, addDoc, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayR
 
 let userID = "";
 let myPupils = [];
+let filteredPupils = [];
 let classInformation = undefined;
 let myData = undefined;
 
@@ -20,12 +21,18 @@ const selectedOption = openedURL.searchParams.get("option");
 const mainContainer = document.getElementById("main-container");
 mainContainer.innerHTML = "";
 
+const applyFilterValue = (filter, action) => {
+    filteredPupils = myPupils.filter(item => item.fullName.toLowerCase().startsWith(filter.toLowerCase()));
+    action();
+}
+
 const renderContent = async() => {
     mainContainer.innerHTML = "";
     const querySnapshot1 = await getDocs(collection(db, "userInfo"));
     querySnapshot1.forEach((doc) => {
         myPupils.push(doc.data());
     });
+    filteredPupils = myPupils;
     if(userID !== ""){
         const docRef = doc(db, "userInfo", userID.toString());
         const docSnap = await getDoc(docRef);
@@ -133,10 +140,93 @@ const renderAddHomeWork = () => {
 }
 
 const renderPupilAcitvity = () => {
+    const contentWrapper = document.createElement("div");
+    contentWrapper.classList.add("teacher-content-wrapper");
+    contentWrapper.setAttribute("id","teacher-content-wrapper");
+    const mainTitle = document.createElement("h3");
     mainTitle.innerText = "Aktivnost učencev";
     contentWrapper.appendChild(mainTitle);
 
-    
+    const firstRow = document.createElement("div");
+    firstRow.classList.add("subcontent-first-row");
+    firstRow.innerHTML = `
+        <div class="first-row-col" id="first-row-col-1">
+            #
+        </div>
+        <div class="first-row-col" id="first-row-col-2">
+            Ime in priimek <ion-icon id="sort-content-icon1" name="swap-vertical-outline" />
+        </div>
+        <div class="first-row-col" id="first-row-col-3">
+            Nazadnje aktiven <ion-icon id="sort-content-icon2" name="swap-vertical-outline" />
+        </div>
+        <div class="first-row-col" id="first-row-col-4">
+            <ion-icon id="sort-content-icon3" name="add-outline" />
+        </div>
+    `;
+    contentWrapper.appendChild(firstRow);
+    const allUsersContainer = document.createElement("div");
+    allUsersContainer.classList.add("teacher-manage-pupils-wrapper");
+    allUsersContainer.style.height = "fit-content";
+    myPupils.forEach((item, index) => {
+        if(classInformation.pupils.indexOf(item.userID) !== -1){
+            let lastOnline = item.lastOnline;
+            let currentDate = new Date().getTime();
+            let timeDifference = currentDate - lastOnline;
+            if(timeDifference < (60 * 1000)){
+                timeDifference = "Manj kot minuto nazaj."
+            }else if(timeDifference < (60 * 1000 * 60)){
+                timeDifference = Math.floor(timeDifference/1000/60) + ` 
+                ${
+                    Math.floor(timeDifference/1000/60) === 1 ? "minuto"
+                    : Math.floor(timeDifference/1000/60) === 2 ? "minuti"
+                    : Math.floor(timeDifference/1000/60) === 3 ? "minute"
+                    : Math.floor(timeDifference/1000/60) === 4 ? "minute"
+                    : "minut"
+                }
+                 nazaj.`;
+            }else if(timeDifference < (60 * 1000 * 60 * 24)){
+                timeDifference = Math.floor(timeDifference/1000/60/60) + ` 
+                ${
+                    Math.floor(timeDifference/1000/60/60) === 1 ? "uro"
+                    : Math.floor(timeDifference/1000/60/60) === 2 ? "uri"
+                    : Math.floor(timeDifference/1000/60/60) === 3 ? "ure"
+                    : Math.floor(timeDifference/1000/60/60) === 4 ? "ure"
+                    : "ur"
+                }
+                 nazaj.`;
+            }else if(timeDifference < (60 * 1000 * 60 * 24 * 31)){
+                timeDifference = Math.floor(timeDifference/1000/60/60/24) + ` 
+                ${
+                    Math.floor(timeDifference/1000/60/60/24) === 1 ? "dan"
+                    : Math.floor(timeDifference/1000/60/60/24) === 2 ? "dneva"
+                    : Math.floor(timeDifference/1000/60/60/24) === 3 ? "dneve"
+                    : Math.floor(timeDifference/1000/60/60/24) === 4 ? "dneve"
+                    : "dni"
+                }
+                 nazaj.`;
+            }else if(timeDifference > (60 * 1000 * 60 * 24 * 31)){
+                timeDifference = `Več kot mesec dni nazaj.`;
+            }else{
+                timeDifference = `n/a`;
+            }
+            const userWrapper = document.createElement("div");
+            userWrapper.classList.add("subcontent-user-wrapper");
+            userWrapper.innerHTML = `
+            <div id="first-row-col-1">
+                ${index+1}
+            </div>
+            <div id="first-row-col-2">
+                ${item.fullName}
+            </div>
+            <div id="first-row-col-3">
+                ${timeDifference}
+            </div>
+            `;
+
+            allUsersContainer.appendChild(userWrapper);
+        }
+    });
+    contentWrapper.appendChild(allUsersContainer);
     mainContainer.appendChild(contentWrapper);
 }
 
@@ -197,7 +287,15 @@ const renderSeeAndManagePupils = () => {
     searchFieldWrapper.appendChild(searchIcon);
     const searchField = document.createElement("input");
     searchField.addEventListener("keyup", ()=>{
-        
+        if(searchField.value.length === 0){
+            console.log("search field is empty");
+            filteredPupils = myPupils;
+            console.log("filtered pupils: ", filteredPupils);
+            renderUsers();
+        }else{
+            console.log("search field is not empty");
+            applyFilterValue(searchField.value, renderUsers);
+        }
     });
     searchField.setAttribute("type", "text");
     searchField.classList.add("admin-content-search-field");
@@ -223,36 +321,41 @@ const renderSeeAndManagePupils = () => {
     `;
     const allUsersContainer = document.createElement("div");
     allUsersContainer.classList.add("teacher-manage-pupils-wrapper");
-    myPupils.forEach((item, index) => {
-        if(classInformation.pupils.indexOf(item.userID) === -1 && !item.admin && !item.teacher){
-            const userWrapper = document.createElement("div");
-            userWrapper.classList.add("subcontent-user-wrapper");
-            userWrapper.innerHTML = `
-            <div id="first-row-col-1">
-                ${index+1}
-            </div>
-            <div id="first-row-col-2">
-                ${item.fullName}
-            </div>
-            <div id="first-row-col-3">
-                ${item.class}
-            </div>
-            `;
+    const renderUsers = () => {
+        allUsersContainer.innerHTML = "";
+        filteredPupils.forEach((item, index) => {
+            if(classInformation.pupils.indexOf(item.userID) === -1 && !item.admin && !item.teacher){
+                const userWrapper = document.createElement("div");
+                userWrapper.classList.add("subcontent-user-wrapper");
+                userWrapper.innerHTML = `
+                <div id="first-row-col-1">
+                    ${index+1}
+                </div>
+                <div id="first-row-col-2">
+                    ${item.fullName}
+                </div>
+                <div id="first-row-col-3">
+                    ${item.class}
+                </div>
+                `;
 
-            const manageIcons = document.createElement("div");
-            manageIcons.setAttribute("id", "first-row-col-4");
-            const addIcon = document.createElement("div");
-            addIcon.setAttribute("id", "add-pupil-to-class");
-            addIcon.innerHTML = "<span title='Dodaj učenca/ko v svoj razred.'><ion-icon name='add-outline'></ion-icon></span>"
-            addIcon.addEventListener("click", ()=>{
-                addToClass(item.userID);
-            });
-            manageIcons.appendChild(addIcon);
-            userWrapper.appendChild(manageIcons);
+                const manageIcons = document.createElement("div");
+                manageIcons.setAttribute("id", "first-row-col-4");
+                const addIcon = document.createElement("div");
+                addIcon.setAttribute("id", "add-pupil-to-class");
+                addIcon.innerHTML = "<span title='Dodaj učenca/ko v svoj razred.'><ion-icon name='add-outline'></ion-icon></span>"
+                addIcon.addEventListener("click", ()=>{
+                    addToClass(item.userID);
+                });
+                manageIcons.appendChild(addIcon);
+                userWrapper.appendChild(manageIcons);
 
-            allUsersContainer.appendChild(userWrapper);
-        }
-    });
+                allUsersContainer.appendChild(userWrapper);
+            }
+        });
+    }
+
+    renderUsers();
 
     contentWrapper.appendChild(searchFieldWrapper);
     contentWrapper.appendChild(firstRow);

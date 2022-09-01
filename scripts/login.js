@@ -1,6 +1,6 @@
 import {auth, db} from './firebase.js';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
-import { doc, setDoc, getDocs, collection, getDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { doc, setDoc, getDocs, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import { renderProfileScreen } from './profile.js';
 
 let userID = "";
@@ -42,12 +42,21 @@ const checkIfBanned = async(userID) => {
     }
 }
 
+const updateLastOnline = async(userID) =>{
+    const dateOnline = new Date();
+    const lastOnlineRef = doc(db, "userInfo", userID);
+    await updateDoc(lastOnlineRef, {
+        lastOnline: dateOnline.getTime(),
+    });
+}
+
 const handleLogIn = (userData) =>{
     signInWithEmailAndPassword(auth, userData.email, userData.password)
     .then((userCredential) => {
         const user = userCredential.user;
         document.getElementById("main-container").innerHTML = "";
         checkIfBanned(user.uid);
+        updateLastOnline(user.uid);
         //renderProfileScreen(user.uid);
     })
     .catch((error) => {
@@ -58,9 +67,11 @@ const handleLogIn = (userData) =>{
         const errorCode = error.code;
         const errorMessage = error.message;
     });
+
 }
 
 const addUserData = async(userID, userData, className) => {
+    const dateOnline = new Date();
     await setDoc(doc(db, "userInfo", userID), {
         userID: userID,
         email: userData.email,
@@ -69,6 +80,7 @@ const addUserData = async(userID, userData, className) => {
         lessonsDone: [],
         timeSpentTyping: 0,
         class: className,
+        lastOnline: dateOnline.getTime(),
         profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
     });
     window.location = "../pages/profile.html";
@@ -214,7 +226,6 @@ const renderFields = () =>{
                 warningMessage.innerText = "";
             }, 5000);
         }
-        
     });
     formContainer.appendChild(submitButton);
 
