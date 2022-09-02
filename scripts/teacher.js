@@ -5,6 +5,7 @@ import { collection, addDoc, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayR
 let userID = "";
 let myPupils = [];
 let filteredPupils = [];
+let allHomeworks = [];
 let classInformation = undefined;
 let myData = undefined;
 
@@ -32,6 +33,10 @@ const renderContent = async() => {
     querySnapshot1.forEach((doc) => {
         myPupils.push(doc.data());
     });
+    const querySnapshot2 = await getDocs(collection(db, "homework"));
+    querySnapshot2.forEach((doc) => {
+        allHomeworks.push(doc.data());
+    });
     filteredPupils = myPupils;
     if(userID !== ""){
         const docRef = doc(db, "userInfo", userID.toString());
@@ -39,13 +44,11 @@ const renderContent = async() => {
         if (docSnap.exists()) {
             myData = docSnap.data();
         }
-        console.log(myData);
         const docRef2 = doc(db, "classInformation", myData.class.toString());
         const docSnap2 = await getDoc(docRef2);
         if (docSnap2.exists()) {
             classInformation = docSnap2.data();
         }
-        console.log("class information: ", classInformation);
     }
     
 
@@ -83,8 +86,8 @@ const handleUploadHomeWork = async(textArray) => {
         teacherID: userID,
         dateUploaded: d,
         assignedTo: "all",
+        doneIt: [],
     });
-    console.log("Document written with ID: ", docRef.id);
     window.location = "./login.html";
 }
 
@@ -130,11 +133,48 @@ const renderAddHomeWork = () => {
         });
         textAreaValue = tempArr;*/
 
-        console.log("besedilo: ", textAreaValue);
         handleUploadHomeWork(textAreaValue);
 
     });
     contentWrapper.appendChild(submitButton);
+
+    const previousHomeworks = document.createElement("div");
+    previousHomeworks.classList.add("previous-homeworks");
+    previousHomeworks.innerHTML += "<h3>Pretekle domače naloge</h3>";
+    allHomeworks.sort((a, b) => (a.dateUploaded > b.dateUploaded) ? -1 : ((b.dateUploaded > a.dateUploaded) ? 1 : 0))
+    allHomeworks.forEach(item => {
+        if(item.teacherID.toString() === myData.userID){
+            let homeworkText = "";
+            item.homeworkTextArray.forEach(item => {
+                homeworkText += item;
+                homeworkText += " ";
+            });
+            const homeworkWrapper = document.createElement("div");
+            homeworkWrapper.classList.add("homework-wrapper");
+            const date = new Date(item.dateUploaded.seconds*1000);
+            homeworkWrapper.innerHTML = `
+                <span><b>Dodeljena:</b> ${date.getDate()}. ${(parseInt(date.getMonth())+1)}. ${date.getFullYear()}.</span>
+                <span><b>Besedilo:</b> ${homeworkText.substring(0,50).toUpperCase()}...</span>
+            `;
+            homeworkWrapper.innerHTML += "<span><b>Nalogo so naredili: </b></span>";
+            if(item.doneIt !== undefined && item.doneIt.length !== 0){
+                let listOfStudents = "";
+                item.doneIt.forEach((subitem, index) =>{
+                    listOfStudents += subitem;
+                    if(index !== item.doneIt.length-1){
+                        listOfStudents += ", ";
+                    }else{
+                        listOfStudents += ".";
+                    }
+                });
+                homeworkWrapper.innerHTML += listOfStudents;
+            }else{
+                homeworkWrapper.innerHTML += "Še nobeden";
+            }
+            previousHomeworks.appendChild(homeworkWrapper);
+        }
+    });
+    contentWrapper.appendChild(previousHomeworks);
 
     mainContainer.appendChild(contentWrapper);
 }
@@ -247,7 +287,6 @@ const renderSeeAndManagePupils = () => {
     subTitle.innerText = "Moje učenke in učenci";
     myPupilsContainer.appendChild(subTitle);
     myPupils.forEach((item, index) => {
-        console.log(item);
         if(classInformation.pupils.indexOf(item.userID) !== -1){
             const userWrapper = document.createElement("div");
             userWrapper.classList.add("subcontent-user-wrapper");
@@ -288,12 +327,9 @@ const renderSeeAndManagePupils = () => {
     const searchField = document.createElement("input");
     searchField.addEventListener("keyup", ()=>{
         if(searchField.value.length === 0){
-            console.log("search field is empty");
             filteredPupils = myPupils;
-            console.log("filtered pupils: ", filteredPupils);
             renderUsers();
         }else{
-            console.log("search field is not empty");
             applyFilterValue(searchField.value, renderUsers);
         }
     });

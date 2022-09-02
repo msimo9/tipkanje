@@ -987,6 +987,33 @@ ion-icon{
     border-top-right-radius: 8px;
 }
 
+.previous-homeworks{
+    width: 40%;
+    margin-top: 50px;
+}
+
+.previous-homeworks h3{
+    font-weight: 300;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.homework-wrapper{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #395B64;
+    color: #E7F6F2;
+    padding: 15px 15px;
+    border-radius: 10px;
+    transition: all 500ms linear;
+}
+
+.homework-wrapper:hover{
+    background-color: #2C3333;
+    box-shadow: 3px 3px 15px 3px #395B64;
+}
+
 @keyframes showChangeInfoModal {
     from{
         height: 0px;
@@ -1060,6 +1087,9 @@ ion-icon{
     .teacher-fields-wrapper{
         width: 60%;
     }
+    .previous-homeworks{
+        width: 60%;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -1117,6 +1147,9 @@ ion-icon{
         width: 70%;
     }
     .teacher-fields-wrapper{
+        width: 80%;
+    }
+    .previous-homeworks{
         width: 80%;
     }
 }
