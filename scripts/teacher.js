@@ -85,7 +85,7 @@ const handleUploadHomeWork = async(textArray) => {
         homeworkTextArray: textArray,
         teacherID: userID,
         dateUploaded: d,
-        assignedTo: "all",
+        assignedTo: classInformation.pupils,
         doneIt: [],
     });
     window.location = "./login.html";

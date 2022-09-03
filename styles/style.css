@@ -10,7 +10,7 @@
 *{
     margin: 0;
     padding: 0;
-    /*border: 1px solid red;*/
+    /*border: 0.5px solid red;*/
 }
 
 hmtl, body{
@@ -313,7 +313,7 @@ span{
     width: 50%;
     display: flex;
     justify-content: flex-end;
-    align-items: flex-end;
+    align-items: center;
     padding-right: 10px;
     font-size: 20px;
     -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%);
@@ -334,7 +334,7 @@ span{
     mask-image: linear-gradient(to right, black 50%, transparent 100%);
     display: flex;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: center;
     position: relative;
 }
 
@@ -694,12 +694,15 @@ span{
     cursor: pointer;
 }
 
-#change-info-fields-modal ion-icon{
+#change-info-fields-modal #close-modal-outline{
     position: absolute;
     right: 5px;
     top: 5px;
+    margin: 0;
+    padding: 0;
     font-size: 20px;
     color: #E7F6F2;
+    z-index: 500;
 }
 
 #change-info-fields-modal ion-icon:hover{
@@ -1013,6 +1016,69 @@ ion-icon{
     background-color: #2C3333;
     box-shadow: 3px 3px 15px 3px #395B64;
 }
+
+.homework-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.homework-container h3{
+    margin-bottom: 25px;
+}
+
+.homework-wrapper-div{
+    width: 40%;
+    padding: 10px 10px;
+    background-color: #395B64;
+    border-radius: 10px;
+    transition: all 300ms linear;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 10px 0;
+    color: #E7F6F2;
+    flex-direction: column;
+    position: relative;
+}
+
+.homework-wrapper-div:hover{
+    box-shadow: 3px 3px 15px #2C3333;
+    border-radius: 5px;
+}
+
+.homework-wrapper-div h4{
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.homework-wrapper-div span{
+    width: 75%;
+}
+
+.homework-start-button{
+    position: absolute;
+    right: 15px;
+    width: 15%;
+    height: 50px;
+    background-color: #E7F6F2;
+    color: #395B64;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 300ms linear;
+}
+
+.homework-start-button:hover{
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 
 @keyframes showChangeInfoModal {
     from{

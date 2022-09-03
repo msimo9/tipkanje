@@ -201,11 +201,10 @@ export const renderProfileScreen = async(uid) =>{
             }, 500);
         }
 
-        const closeModalIcon = document.createElement("ion-icon");
-        closeModalIcon.setAttribute("name", "close-outline");
-        closeModalIcon.addEventListener("click", ()=>{
-            hideModal();
-        });
+        const closeModalIcon = document.createElement("div");
+        closeModalIcon.innerHTML = "<ion-icon name='close-outline'></ion-icon>"
+        closeModalIcon.setAttribute("id", "close-modal-outline");
+        closeModalIcon.addEventListener("click", hideModal);
         //
         const changeInfo = document.createElement("h5");
         changeInfo.innerHTML = `Spremeni osebne podatke<ion-icon name="brush-outline" />`;
