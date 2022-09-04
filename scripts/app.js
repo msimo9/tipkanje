@@ -1,3 +1,7 @@
+import {auth, db, storage} from './firebase.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc  } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+
 const mainContent = document.getElementById("main-content");
 const wordsContainer = document.createElement("div");
 wordsContainer.classList.add("content-words-container");
@@ -6,11 +10,32 @@ const errrorsContainer = document.createElement("div");
 errrorsContainer.setAttribute("id", "content-errors-container");
 mainContent.appendChild(errrorsContainer);
 
+
+let userID = "";
+let userInfo = undefined;
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const uid = user.uid;
+        userID = uid;
+        getUserData();
+    }
+});
+
+const getUserData = async() => {
+    const docRef = doc(db, "userInfo", userID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        userInfo = docSnap.data();
+    }
+}
+
 let numberOfErrors = 0;
 let errorFlag = true;
 let stringToType = "";
 let exercises = undefined;
 let tocke = 0;
+let homework = undefined;
 
 const getData = () =>{
     exercises = localStorage.getItem('exercises');
@@ -26,22 +51,41 @@ const getData = () =>{
     fillUpWords();
 }
 
+const finishHomework = async() => {
+    let homeworkID = localStorage.getItem("homeworkID");
+    const homeworkRef = doc(db, "homework", homeworkID);
+    await updateDoc(homeworkRef, {
+        doneIt: arrayUnion(userInfo.fullName),
+        doneItIDs: arrayUnion(userID),
+    });
+    window.location = "./pages/homework.html";
+}
+
 const fillUpWords = () => {
-    stringToType = "";
-    if(exercises !== null){
-        for(let i = 0; i < 20; i++){
-            stringToType += exercises[Math.floor(Math.random() * exercises.length + 0)];
-            if(i !== 19) stringToType += " ";
+    homework = localStorage.getItem("homework");
+    if(homework === null){
+        stringToType = "";
+        if(exercises !== null){
+            for(let i = 0; i < 20; i++){
+                stringToType += exercises[Math.floor(Math.random() * exercises.length + 0)];
+                if(i !== 19) stringToType += " ";
+            }
+        }else{
+            stringToType = "Bezgov brizgec brizga bezgovo brozgo";
         }
     }else{
-        stringToType = "Bezgov brizgec brizga bezgovo brozgo";
+        stringToType = "";
+        if(exercises !== null){
+            stringToType = exercises.join(" ");
+        }else{
+            stringToType = "Bezgov brizgec brizga bezgovo brozgo";
+        }
     }
     mainApp();
 }
 
 const dividerBlink = () => {
     const dividerRef = document.getElementById("words-container-divider");
-    console.log(dividerRef.style.borderLeft);
     if(dividerRef.style.borderLeft === "2px solid #2C3333"){
         dividerRef.style.borderLeft = "2px solid transparent";
     }else if(dividerRef.style.borderLeft === "2px solid transparent"){
@@ -104,11 +148,11 @@ const mainApp = () => {
             ||
             currentKey === " " && currentLetter === "␣"
         ){
-            correctFlag = true;
             const charSpan = document.createElement("span");
             charSpan.innerText = cutSampleString.substring(0, 1).toUpperCase();
             charSpan.style.color = correctFlag === true ? "green" : "red";
             column1.appendChild(charSpan);
+            correctFlag = true;
 
 
             cutSampleString = cutSampleString.substring(1, cutSampleString.length);
@@ -118,6 +162,9 @@ const mainApp = () => {
                 document.getElementById("words-column-2").remove();
                 document.getElementById("words-container-divider").remove();
                 fillUpWords();
+                if(homework !== null){
+                    finishHomework();
+                }
                 numberOfErrors = 0;
                 errrorsContainer.innerHTML = `Število napak: <b>${numberOfErrors}</b>`;
                 /*cutSampleString = sampleString;

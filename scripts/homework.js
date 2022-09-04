@@ -5,6 +5,7 @@ import { doc, getDoc, getDocs, collection } from "https://www.gstatic.com/fireba
 let userID = "";
 let userInfo = undefined;
 let allHomeworks = [];
+let allHomeworksIds = [];
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -26,6 +27,7 @@ const getUserData = async() => {
     //homeworks
     const querySnapshot = await getDocs(collection(db, "homework"));
     querySnapshot.forEach((doc) => {
+        allHomeworksIds.push(doc.id);
         allHomeworks.push(doc.data());
     });
 
@@ -43,7 +45,7 @@ const renderContent = () => {
     homeworkContainer.innerHTML = "<h3>Domače naloge</h3>";
 
     allHomeworks.map((item, index) => {
-        if(item.assignedTo.indexOf(userID) !== -1 && item.doneIt.indexOf(userID) === -1){
+        if(item.assignedTo.indexOf(userID) !== -1 && item.doneItIDs.indexOf(userID) === -1){
             const dateU = new Date(item.dateUploaded.seconds*1000);
             let hwText = "";
             item.homeworkTextArray.forEach(item => {
@@ -54,10 +56,18 @@ const renderContent = () => {
             wrapperDiv.classList.add("homework-wrapper-div");
             wrapperDiv.innerHTML = `
                 <h4><b>Datum:</b> ${dateU.getDate()}. ${(parseInt(dateU.getMonth()) + 1)}. ${dateU.getFullYear()}</h4>
-                <span><b>Besedilo:</b> ${hwText}</span>
+                <span><b>Besedilo:</b> ${hwText.substring(0, 200)}...</span>
             `;
             const startButton = document.createElement("div");
             startButton.innerText = "Začni";
+            startButton.addEventListener("click", ()=>{
+                const timeAdded = new Date();
+                localStorage.setItem("timeAdded", timeAdded.getTime());
+                localStorage.setItem("homework", "true");
+                localStorage.setItem("homeworkID", allHomeworksIds[index]);
+                localStorage.setItem("exercises", item.homeworkTextArray.join(","));
+                window.location = "../index.html";
+            });
             startButton.classList.add("homework-start-button");
             wrapperDiv.appendChild(startButton);
             homeworkContainer.appendChild(wrapperDiv);

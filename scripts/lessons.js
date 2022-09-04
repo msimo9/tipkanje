@@ -39,6 +39,9 @@ exercises.map(item => {
     lessonWrapper.addEventListener("click", ()=>{
         const timeAdded = new Date();
         localStorage.setItem("timeAdded", timeAdded.getTime());
+        if(localStorage.getItem("homework") !== null){
+            localStorage.removeItem("homework");
+        }
         localStorage.setItem("exercises", item.data.join());
         window.location = "../index.html";
     });

@@ -4,6 +4,7 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-f
 
 const header = document.getElementById("header");
 
+const pageTitle = document.title;
 let userID = "";
 
 onAuthStateChanged(auth, (user) => {
@@ -86,8 +87,6 @@ const renderContent = (option) => {
     closeModal.setAttribute("id", "close-modal");
     closeModal.addEventListener("click", ()=>{toggleModalMenu()});
     modalMenu.appendChild(closeModal);
-
-    const pageTitle = document.title;
 
     const buttons = [
         {
