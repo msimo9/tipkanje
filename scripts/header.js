@@ -6,6 +6,7 @@ const header = document.getElementById("header");
 
 const pageTitle = document.title;
 let userID = "";
+let userInfo = undefined;
 
 onAuthStateChanged(auth, (user) => {
     if(document.getElementById("loggin-wrapper")){
@@ -14,9 +15,9 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
         userID = uid;
-        renderContent(1);
+        getUserData(userID, true);
     } else {
-        renderContent(2);
+        getUserData("", false);
     }
         
 });
@@ -29,7 +30,7 @@ const getUserData = async(userID, loggedIn) =>{
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            let userInfo = docSnap.data();
+            userInfo = docSnap.data();
             loginWrapper.innerHTML = `<span>${userInfo.fullName}</span><img id="header-profile-photo" src="${userInfo.profileImageURL}" />`;
             loginWrapper.addEventListener("click", ()=>{
                 window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}login.html`;
@@ -42,11 +43,11 @@ const getUserData = async(userID, loggedIn) =>{
             window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}login.html`;
         });
     }
-
+    renderContent();
     header.appendChild(loginWrapper);
 }
 
-const renderContent = (option) => {
+const renderContent = () => {
 
     const toggleModalMenu = () =>{
         if(modalMenu.style.display === "none"){
@@ -112,7 +113,7 @@ const renderContent = (option) => {
     ];
 
     buttons.forEach(item => {
-        if(item.text === "Domače naloge" && userID !== "" || item.text !== "Domače naloge"){
+        if(item.text === "Domače naloge" && userID !== "" && !userInfo.teacher || item.text !== "Domače naloge"){
             const buttonContainer = document.createElement("div");
             buttonContainer.innerText = item.text;
             buttonContainer.classList.add("modal-menu-options");
@@ -139,9 +140,4 @@ const renderContent = (option) => {
     header.appendChild(modalMenu);
     header.appendChild(headerTitle);
 
-    if(option === 1){
-        getUserData(userID, true);
-    }else if(option === 2){
-        getUserData("", false);
-    }
 }

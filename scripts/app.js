@@ -58,6 +58,7 @@ const finishHomework = async() => {
         doneIt: arrayUnion(userInfo.fullName),
         doneItIDs: arrayUnion(userID),
     });
+    window.localStorage.clear();
     window.location = "./pages/homework.html";
 }
 

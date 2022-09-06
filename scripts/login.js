@@ -4,7 +4,7 @@ import { doc, setDoc, getDocs, collection, getDoc, updateDoc } from "https://www
 import { renderProfileScreen } from './profile.js';
 
 let userID = "";
-
+let teacherCheckboxValue = false;
 let isUserBanned = false;
 
 const checkIfLoggedIn = () =>{
@@ -78,8 +78,9 @@ const addUserData = async(userID, userData, className) => {
         fullName: userData.fullName,
         code: userData.code,
         lessonsDone: [],
+        teacher: teacherCheckboxValue === true && userData.code === "123456ABC" ? true : false,
         timeSpentTyping: 0,
-        class: className,
+        class: userData.class,
         lastOnline: dateOnline.getTime(),
         profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
     });
@@ -120,8 +121,14 @@ let userInfo = {
     password: "",
     passwordRepeat: "",
     fullName: "",
+    class: "",
     code: "",
     profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
+    
+}
+
+const changeClass = (value1, value2) => {
+    userInfo["class"] = value1+""+value2;
 }
 
 let operation = "login";
@@ -139,15 +146,16 @@ const renderFields = () =>{
     inputFieldsContainer.classList.add("form-input-fields-container");
 
     Object.keys(userInfo).forEach((item, index) => {
-        if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup" && index < 5){
+        if(item !== "profileImageURL" && operation === "login" && index < 2 || operation === "signup" && index < 6){
 
-            if(operation === "signup" && index === 4){
+            if(operation === "signup" && index === 5){
                 const inputFieldTitle = document.createElement("h3");
                 inputFieldTitle.innerText = "Učitelj?"
                 const teacherCheckbox = document.createElement("input");
                 teacherCheckbox.setAttribute("type", "checkbox");
                 teacherCheckbox.setAttribute("id", "teacher-checkbox");
                 teacherCheckbox.addEventListener("click", ()=>{
+                    teacherCheckboxValue = teacherCheckbox.checked;
                     if(teacherCheckbox.checked){
                         document.getElementById("code-field-title").style.display = "flex";
                         document.getElementById("code-field").style.display = "flex";
@@ -167,14 +175,16 @@ const renderFields = () =>{
                 case 1: inputFieldTitle.innerText = "Geslo"; break;
                 case 2: inputFieldTitle.innerText = "Ponovi geslo"; break;
                 case 3: inputFieldTitle.innerText = "Ime in priimek"; break;
-                case 4: inputFieldTitle.innerHTML = "Koda"; break;
+                case 4: inputFieldTitle.innerHTML = "Razred"; break;
+                case 5: inputFieldTitle.innerHTML = "Koda"; break;
                 default: break;
             }
-            if(index === 4){
+            if(index === 5){
                 inputFieldTitle.setAttribute("id", "code-field-title");
                 inputFieldTitle.style.display = "none";
             }
             inputFieldsContainer.appendChild(inputFieldTitle);
+            
             const inputField = document.createElement("input");
             inputField.addEventListener("keyup", ()=>{
                 userInfo[item] = inputField.value; 
@@ -199,11 +209,42 @@ const renderFields = () =>{
                 passwordWrapper.appendChild(inputField);
                 inputFieldsContainer.appendChild(passwordWrapper);
             }else{
-                if(index === 4){
+                if(index === 5){
                     inputField.setAttribute("id", "code-field");
                     inputField.style.display = "none";
                 }
-                inputFieldsContainer.appendChild(inputField);
+                if(index !== 4){
+                    inputFieldsContainer.appendChild(inputField);
+                }else{
+                    const dropdownOption = document.createElement("div");
+                    dropdownOption.addEventListener("change", ()=>{
+                        changeClass(document.getElementById("razred").value, document.getElementById("oddelek").value)
+                    });
+                    dropdownOption.classList.add("dropdown-class-picker");
+                    dropdownOption.innerHTML += `
+                    <select name="razred" id="razred">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                    `;
+                    
+                    dropdownOption.innerHTML += `
+                    <select name="oddelek" id="oddelek">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="E">E</option>
+                    </select>
+                    `;
+                    inputFieldsContainer.appendChild(dropdownOption);
+                }
             }
         }
     });

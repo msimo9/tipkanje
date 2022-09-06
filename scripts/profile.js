@@ -33,10 +33,10 @@ const handleChangeUserInfo = async(fullName, email) =>{
     });
 }
 
-const handleChangeClass = async(newCode) =>{
+const handleChangeClass = async(value1, value2) =>{
     const updateRef = doc(db, "userInfo", userID);
     await updateDoc(updateRef, {
-        code: newCode,
+        class: value1+""+value2,
     });
 }
 
@@ -254,19 +254,39 @@ export const renderProfileScreen = async(uid) =>{
             const divTitle = document.createElement("h3");
             divTitle.innerText = "Spremeni razred";
             changeInfoFields.appendChild(divTitle);
-            //FULL NAME
-            const inputTitle1 = document.createElement("h4");
-            inputTitle1.innerText = "Nova koda:";
-            const inputField1 = document.createElement("input");
-            inputField1.setAttribute("placeholder", userInfo.code);
-            changeInfoFields.appendChild(inputTitle1);
-            changeInfoFields.appendChild(inputField1);
+            //CLASS PICKER
+            const dropdownOption = document.createElement("div");
+            dropdownOption.classList.add("dropdown-class-picker");
+            dropdownOption.style.flexDirection = "row";
+            //userInfo.class
+            let htmlDropdownText = "";
+            htmlDropdownText += `<select name="razred" id="razred">`;
+            for(let i=1; i<=9; i++){
+                htmlDropdownText += 
+                `<option
+                    ${userInfo.class.substring(0,1).toString() === i.toString() ? "selected='selected'" : ""}
+                    value="${i}">${i}
+                </option>`
+            }
+            htmlDropdownText += `</select>;`;
+            dropdownOption.innerHTML += htmlDropdownText;
+            
+            dropdownOption.innerHTML += `
+            <select name="oddelek" id="oddelek">
+                <option ${userInfo.class.substring(1,2).toString() === "A" ? "selected='selected'" : ""} value="A">A</option>
+                <option ${userInfo.class.substring(1,2).toString() === "B" ? "selected='selected'" : ""} value="B">B</option>
+                <option ${userInfo.class.substring(1,2).toString() === "C" ? "selected='selected'" : ""} value="C">C</option>
+                <option ${userInfo.class.substring(1,2).toString() === "E" ? "selected='selected'" : ""} value="E">E</option>
+            </select>
+            `;
+
+            changeInfoFields.appendChild(dropdownOption);
             //SUBMIT BUTTON
             const submitChanges = document.createElement("div");
             submitChanges.innerText = "Potrdi";
             submitChanges.classList.add("button");
             submitChanges.addEventListener("click", ()=>{
-                handleChangeClass(inputField1.value);
+                handleChangeClass(document.getElementById("razred").value, document.getElementById("oddelek").value);
                 document.getElementById("main-container").innerHTML = "";
                 renderProfileScreen(userID);
             });
