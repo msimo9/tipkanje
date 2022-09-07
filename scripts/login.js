@@ -1,6 +1,6 @@
 import {auth, db} from './firebase.js';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js";
-import { doc, setDoc, getDocs, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
+import { doc, setDoc, getDocs, collection, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js";
 import { renderProfileScreen } from './profile.js';
 
 let userID = "";
@@ -83,6 +83,10 @@ const addUserData = async(userID, userData, className) => {
         class: userData.class,
         lastOnline: dateOnline.getTime(),
         profileImageURL: "https://firebasestorage.googleapis.com/v0/b/tipkanje-dc76d.appspot.com/o/userPhotos%2FdefaultPhoto.png?alt=media&token=5af3bf7d-d003-40b1-8260-08abfc6221c8",
+    });
+    const classUpdateRef = doc(db, "classInformation", userData.class.toString());
+    await updateDoc(classUpdateRef, {
+        pupils: arrayUnion(userID)
     });
     window.location = "../pages/profile.html";
 }

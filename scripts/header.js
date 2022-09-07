@@ -38,7 +38,7 @@ const getUserData = async(userID, loggedIn) =>{
         }
     }else{
         loginWrapper.innerHTML = `<span>Prijavi se!</span>`;
-        document.getElementById("Prijava-option").innerText = "Prijava";
+        //document.getElementById("Prijava-option").innerText = "Prijava";
         loginWrapper.addEventListener("click", ()=>{
             window.location = `./${pageTitle !== "DPT" ? "" : "pages/"}login.html`;
         });
